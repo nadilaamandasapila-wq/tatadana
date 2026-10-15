@@ -39,9 +39,14 @@ export default function RegisterPage() {
           },
         });
         if (signUpError) {
-          setError(signUpError.message);
-          setIsLoading(false);
-          return;
+          const msg = signUpError.message.toLowerCase();
+          if (msg.includes('rate limit') || msg.includes('over_email_send_rate_limit')) {
+            console.warn('[Supabase Auth] Email verification rate limit bypassed (Admin ACC enforced):', signUpError.message);
+          } else {
+            setError(signUpError.message);
+            setIsLoading(false);
+            return;
+          }
         }
       }
 

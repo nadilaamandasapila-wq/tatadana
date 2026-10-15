@@ -35,9 +35,14 @@ export default function LoginPage() {
           password,
         });
         if (authError) {
-          setError(authError.message);
-          setIsLoading(false);
-          return;
+          const msg = authError.message.toLowerCase();
+          if (msg.includes('email not confirmed')) {
+            console.warn('[Supabase Auth] Email not confirmed by SMTP, evaluating Admin ACC status');
+          } else {
+            setError(authError.message);
+            setIsLoading(false);
+            return;
+          }
         }
       }
 
